@@ -1,5 +1,9 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
+// Load environment variables from .env file
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Define the URI for connecting to the MongoDB database
 const mongoURI: string | undefined = process.env.MONGO_URI;
 
@@ -8,7 +12,7 @@ if (!mongoURI) {
 }
 
 // Connect to MongoDB using Mongoose
-mongoose.connect("mongodb+srv://admin:%40Darsh.56763@cluster0.von7nfx.mongodb.net/paytm").then(() => {
+mongoose.connect(mongoURI).then(() => {
   console.log("Connected to MongoDB");
 }).catch(err => {
   console.error("Error connecting to MongoDB", err);

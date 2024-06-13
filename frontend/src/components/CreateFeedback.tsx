@@ -1,74 +1,68 @@
-import React, { useState, ChangeEvent } from 'react';
+import { useState } from 'react';
 
-interface CreateFeedbackProps {}
+export function CreateFeedback() {
+    const [name, setName] = useState('');
+    const [feedback, setFeedback] = useState('');
 
-export function CreateFeedback(props: CreateFeedbackProps) {
-    const [name, setName] = useState<string>('');
-    const [feedback, setFeedback] = useState<string>('');
-
-    const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
-    };
-
-    const handleFeedbackChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFeedback(e.target.value);
-    };
-
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+    const handleFeedbackChange = (e: React.ChangeEvent<HTMLInputElement>) => setFeedback(e.target.value);
     const handleSubmit = () => {
         fetch("http://localhost:3000/feedback", {
             method: 'POST',
-            body: JSON.stringify({
-                name: name,
-                feedback: feedback,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            body: JSON.stringify({ name, feedback }),
+            headers: { 'Content-Type': 'application/json' }
         })
         .then(async (res) => {
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.msg || 'Failed to submit feedback');
+            }
             const json = await res.json();
             alert("Feedback published successfully");
         })
-        .catch((error) => {
-            console.error('Error:', error);
-            alert("Failed to publish feedback");
+        .catch(err => {
+            console.error("Error:", err.message);
+            alert("Error: " + err.message);
         });
     };
 
     return (
-        <div>
+        <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
             <input
-                style={{
-                    width: '10%',
-                    padding: '10px',
-                    fontSize: '16px',
-                    margin: 10
-                }}
+                style={inputStyle}
                 type="text"
-                placeholder="name"
+                placeholder="Name"
                 onChange={handleNameChange}
-            /><br />
+                value={name}
+            />
             <input
-                style={{
-                    width: '10%',
-                    padding: '10px',
-                    fontSize: '16px',
-                    margin: 10
-                }}
+                style={inputStyle}
                 type="text"
-                placeholder="feedback"
+                placeholder="Feedback"
                 onChange={handleFeedbackChange}
-            /><br />
+                value={feedback}
+            />
             <button
-                style={{
-                    padding: '10px',
-                    fontSize: '16px',
-                    margin: 10
-                }}
+                style={buttonStyle}
                 onClick={handleSubmit}
             >
-                Give feedback
+                Give Feedback
             </button>
         </div>
     );
 }
+
+const inputStyle = {
+    width: '90%',
+    padding: '10px',
+    fontSize: '16px',
+    margin: '10px 0',
+    display: 'block'
+};
+
+const buttonStyle = {
+    padding: '10px 20px',
+    fontSize: '16px',
+    margin: '10px 0',
+    display: 'block'
+};
