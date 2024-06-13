@@ -66,7 +66,7 @@ This project is a Simple Feedback Management System built using Node.js, Express
 
 ## Project Screenshot
 
-![Project Screenshot](./path-to-your-screenshot-file/Screenshot_2024-06-13_at_5.38.33_PM.png)
+![Project Screenshot](./front.png)
 
 ## API Documentation
 
